@@ -6,8 +6,8 @@ import sys
 sys.setrecursionlimit(10000)
 
 # Размер лабиринта (должен быть нечётным для корректной генерации)
-WIDTH = 101
-HEIGHT = 101
+WIDTH = 21
+HEIGHT = 21
 SAVE_PATH = "saved/maze_21x21.npy"
 
 # Направления: (dx, dy)

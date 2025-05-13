@@ -4,6 +4,7 @@ from maze_env import MazeEnv
 from tqdm import trange
 import os
 import matplotlib.pyplot as plt
+import imageio.v2 as imageio
 
 MAZE_PATH = "saved/maze_21x21.npy"
 QTABLE_PATH = "saved/q_table_21x21.npy"
@@ -26,6 +27,8 @@ def train_agent():
 
    global EPSILON
    rewards = []
+
+   frames = []
 
    for episode in trange(EPISODES, desc="Training"):
       state = env.reset()
@@ -74,8 +77,12 @@ def train_agent():
          last_action = action
 
          if episode % SHOW_EVERY == 0:
-            env.render(delay=5)
+            env.render()
             env.handle_events()
+            frame_str = pygame.surfarray.array3d(pygame.display.get_surface())
+            frame = np.transpose(frame_str, (1, 0, 2))  # трансформируем оси под imageio
+            frames.append(frame)
+
 
       EPSILON = max(MIN_EPSILON, EPSILON * EPSILON_DECAY)
       rewards.append(total_reward)
@@ -93,6 +100,11 @@ def train_agent():
    plt.tight_layout()
    plt.savefig("saved/training_rewards_21x21.png")
    plt.show()
+
+   gif_path = "saved/training_visualization_21x21.gif"
+   imageio.mimsave(gif_path, frames, fps=70)
+   print(f"GIF saved to {gif_path}")
+
 
 
 if __name__ == '__main__':
